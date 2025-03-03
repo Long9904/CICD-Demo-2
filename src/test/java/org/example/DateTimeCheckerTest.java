@@ -67,4 +67,9 @@ class DateTimeCheckerTest {
     public void testInvalidDate_NegativeMonth() {
         assertFalse(dateTimeChecker.isValidDate(5, -5, 2023));
     }
+
+    @Test
+    public void testInvalidDate_32_2_2023() {
+       assertTrue(dateTimeChecker.isValidDate(32, 2, 2023));
+    }
 }
