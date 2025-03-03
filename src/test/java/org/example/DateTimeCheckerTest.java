@@ -1,5 +1,6 @@
 package org.example;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,11 +71,35 @@ class DateTimeCheckerTest {
 
     @Test
     public void testInvalidDate_32_2_2023() {
-       assertFalse(dateTimeChecker.isValidDate(32, 2, 2023));
+        assertFalse(dateTimeChecker.isValidDate(32, 2, 2023));
     }
 
     @Test
     public void testInvalidDate_31_6_2023() {
         assertFalse(dateTimeChecker.isValidDate(31, 6, 2023));
+    }
+
+    // Test cases to intentionally fail
+    @Test
+    public void testFail_ValidDateButExpectFalse() {
+        assertFalse(dateTimeChecker.isValidDate(15, 6, 2023)); // Should fail
+    }
+
+    @Test
+    public void testFail_InvalidDateButExpectTrue() {
+        assertTrue(dateTimeChecker.isValidDate(31, 4, 2023)); // Should fail
+    }
+
+    // Test cases to be skipped
+    @Disabled("Skipping this test temporarily")
+    @Test
+    public void testSkip_ValidDate() {
+        assertTrue(dateTimeChecker.isValidDate(1, 1, 2023));
+    }
+
+    @Disabled("Skipping this test due to pending bug fix")
+    @Test
+    public void testSkip_InvalidDate() {
+        assertFalse(dateTimeChecker.isValidDate(0, 0, 0));
     }
 }
