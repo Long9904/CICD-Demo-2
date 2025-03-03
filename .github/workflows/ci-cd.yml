@@ -12,6 +12,10 @@ jobs:
   test:
     runs-on: ubuntu-latest  # Chạy pipeline trên máy ảo Ubuntu
 
+    permissions: # Cấp quyền cho pipeline
+      contents: read
+      packages: write
+
     steps:
       # Bước 1: Lấy mã nguồn từ repo
       - name: Checkout mã nguồn
