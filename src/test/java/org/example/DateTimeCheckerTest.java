@@ -72,4 +72,9 @@ class DateTimeCheckerTest {
     public void testInvalidDate_32_2_2023() {
        assertFalse(dateTimeChecker.isValidDate(32, 2, 2023));
     }
+
+    @Test
+    public void testInvalidDate_31_6_2023() {
+        assertFalse(dateTimeChecker.isValidDate(31, 6, 2023));
+    }
 }
