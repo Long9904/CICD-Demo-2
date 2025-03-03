@@ -1,47 +1,56 @@
+# CI/CD cho DateTimeChecker
 name: CI/CD for DateTimeChecker
 
+# Xác định khi nào pipeline sẽ chạy
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # Khi có push vào nhánh main
   pull_request:
-    branches: [ main ]
-
-permissions:
-  checks: write
-  contents: read
+    branches: [ main ]  # Khi có pull request vào nhánh main
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Chạy pipeline trên máy ảo Ubuntu
+
+    permissions: # Cấp quyền cho pipeline
+      contents: read
+      packages: write
 
     steps:
-      - name: Checkout source code
+      # Bước 1: Lấy mã nguồn từ repo
+      - name: Checkout mã nguồn
         uses: actions/checkout@v4
 
+      # Bước 2: Cài đặt Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: '23'
+          java-version: '23'  # Chọn phiên bản Java 23
           distribution: 'adopt'
 
+      # Bước 3: Build và chạy test bằng Maven
       - name: Build and Test with Maven
         run: mvn clean test
 
-      - name: Generate Test Report
-        if: always()
-        run: |
-          mkdir -p test-reports
-          cp target/surefire-reports/*.xml test-reports/
-
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Test Reports
-          path: test-reports/
-
-      - name: Publish Test Results
-        if: always()
+      # Bước 4: Tạo báo cáo test JUnit
+      - name: Generate JUnit Report
+        if: always()  # Luôn chạy, kể cả khi test fail
         uses: mikepenz/action-junit-report@v4
         with:
-          report_paths: 'target/surefire-reports/*.xml'
+          report_paths: 'target/surefire-reports/*.xml'  # Đường dẫn đến file báo cáo test
+
+      # Bước 5: Upload test results để xem chi tiết trên GitHub Actions
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test Results
+          path: target/surefire-reports/
+
+      # Bước 6: Báo cáo kết quả test (pass/fail cụ thể)
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: JUnit Test Report
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
